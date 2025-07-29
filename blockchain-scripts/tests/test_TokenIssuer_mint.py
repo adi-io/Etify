@@ -6,6 +6,9 @@ from web3.exceptions import ContractLogicError
 
 load_dotenv()
 
+script_dir = os.path.dirname(os.path.abspath(__file__))
+contracts_dir = os.path.dirname(script_dir)
+
 # Load environment variables
 PRIVATE_KEY_ADMIN = os.getenv("PRIVATE_KEY_ADMIN")
 WALLET_ADDRESS_ADMIN = os.getenv("WALLET_ADDRESS_ADMIN")

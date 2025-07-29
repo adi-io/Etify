@@ -7,6 +7,9 @@ from web3.exceptions import ContractLogicError
 
 load_dotenv()
 
+script_dir = os.path.dirname(os.path.abspath(__file__))
+contracts_dir = os.path.dirname(script_dir)
+
 PRIVATE_KEY_TEST_USER = os.getenv("PRIVATE_KEY_TEST_USER")
 WALLET_ADDRESS_TEST_USER = os.getenv("WALLET_ADDRESS_TEST_USER")
 USDC_ADDRESS = os.getenv("USDC_ADDRESS")

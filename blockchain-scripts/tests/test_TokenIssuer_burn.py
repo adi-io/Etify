@@ -7,7 +7,7 @@ from web3.exceptions import ContractLogicError
 load_dotenv()
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
-conracts_dir = os.path.dirname(script_dir)
+contracts_dir = os.path.dirname(script_dir)
 TokenIssuer_abi_path = os.path.join(contracts_dir, "abi", "TokenIssuerABI.json")
 TransactionGateway_abi_path = os.path.join(contracts_dir, "abi", "TransactionGatewayABI.json")
 
