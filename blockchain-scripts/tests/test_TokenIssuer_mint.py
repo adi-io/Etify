@@ -15,7 +15,7 @@ WALLET_ADDRESS_ADMIN = os.getenv("WALLET_ADDRESS_ADMIN")
 WALLET_ADDRESS_TEST_USER = os.getenv("WALLET_ADDRESS_TEST_USER")
 TRANSACTIONGATEWAY_ADDRESS = os.getenv("TRANSACTIONGATEWAY_ADDRESS")
 TOKEN_ISSUER_ADDRESS = os.getenv("ETFY_ADDRESS")
-BASE_CHAIN_ID = os.getenv("BASE_CHAIN_ID")
+BASE_CHAIN_ID = int(os.getenv("BASE_CHAIN_ID"))
 TokenIssuer_abi_path = os.path.join(contracts_dir, "abi", "TokenIssuerABI.json")
 TransactionGateway_abi_path = os.path.join(contracts_dir, "abi", "TransactionGatewayABI.json")
 
