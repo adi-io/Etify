@@ -67,4 +67,4 @@ def test_mint(user_address, token_amount, frontend_hash):
     return receipt
 
 
-test_mint(WALLET_ADDRESS_TEST_USER, 1*10**9, "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcd15")
+test_mint(WALLET_ADDRESS_TEST_USER, 1*10**9, "0x6234567890abcdef8234567890abcdef1234567890abcdef1234567890abcd17")

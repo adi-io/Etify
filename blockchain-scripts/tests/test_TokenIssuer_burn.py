@@ -68,4 +68,4 @@ def test_burn(user_address, token_amount, frontend_hash):
     return receipt
 
 
-test_burn(WALLET_ADDRESS_TEST_USER, 1*10**9, "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcd16")
+test_burn(WALLET_ADDRESS_ADMIN, 1*10**9, "0x7234567890abcdef8234567890abcdef1234567890abcdef1234567890abcd17")

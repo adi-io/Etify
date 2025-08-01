@@ -98,4 +98,4 @@ def test_deposit_stable(amount, frontendHash):
 		print("Other error:", e)
 
 
-test_deposit_stable(2*10**6, "0x1234567890abcdef8234567890abcdef1234567890abcdef1234567890abcd17")
+test_deposit_stable(2*10**6, "0x6234567890abcdef8234567890abcdef1234567890abcdef1234567890abcd17")
