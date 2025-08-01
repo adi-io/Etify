@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from web3 import Web3
 import json
+from time import sleep
 from web3.exceptions import ContractLogicError
 
 
@@ -39,6 +40,12 @@ def test_deposit_ETFY(amount, frontendHash):
 	token = w3.eth.contract(address=ETFY_ADDRESS, abi=TOKEN_ISSUER_ABI)
 	nonce = w3.eth.get_transaction_count(WALLET_ADDRESS_TEST_USER, "pending")
 
+
+	etfy_balance = token.functions.balanceOf(WALLET_ADDRESS_TEST_USER).call()
+	print(f"ETFY Balance: {etfy_balance / 10**9} ETFY")
+	allowance = token.functions.allowance(WALLET_ADDRESS_TEST_USER, TRANSACTIONGATEWAY_ADDRESS).call()
+	print(f"Allowance set: {allowance / 10**9} ETFY")
+
 	approve_txn = token.functions.approve(TRANSACTIONGATEWAY_ADDRESS, amount).build_transaction({
 		'chainId': BASE_CHAIN_ID,
 		'gas': 100000,
@@ -54,13 +61,36 @@ def test_deposit_ETFY(amount, frontendHash):
 	receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
 	print("🎉 Approved successfully!" if receipt['status'] == 1 else "❌ Transaction failed.")
 
+	# Check allowance after approval
+	allowance_after = token.functions.allowance(WALLET_ADDRESS_TEST_USER, TRANSACTIONGATEWAY_ADDRESS).call()
+	print(f"Allowance after approval: {allowance_after / 10**9} ETFY")
+	print(f"Trying to deposit: {amount / 10**9} ETFY")
+
+	if allowance_after < amount:
+		print("❌ Insufficient allowance!")
+		return
+
+	# Let's also check if we can call transferFrom directly to see the error
+	try:
+		# This is just a simulation, not an actual transaction
+		result = token.functions.transferFrom(
+			WALLET_ADDRESS_TEST_USER, 
+			TRANSACTIONGATEWAY_ADDRESS, 
+			amount
+		).call({'from': TRANSACTIONGATEWAY_ADDRESS})
+		print("✅ transferFrom simulation successful")
+	except Exception as e:
+		print(f"❌ transferFrom simulation failed: {e}")
+
 	# Deposit
 	gateway = w3.eth.contract(address=TRANSACTIONGATEWAY_ADDRESS, abi=GATEWAY_ABI)
-	nonce = w3.eth.get_transaction_count(WALLET_ADDRESS_TEST_USER, block_identifier="pending")
 
-	deposit_txn = gateway.functions.depositDSPY(amount, frontendHash).build_transaction({
+	# nonce = w3.eth.get_transaction_count(WALLET_ADDRESS_TEST_USER, block_identifier="pending")
+	nonce += 1
+
+	deposit_txn = gateway.functions.depositOurToken(amount, frontendHash).build_transaction({
 		'chainId': BASE_CHAIN_ID,
-		'gas': 150000,
+		'gas': 170000,
 		'gasPrice': w3.to_wei('1', 'gwei'),
 		'nonce': nonce
 	})
@@ -73,5 +103,22 @@ def test_deposit_ETFY(amount, frontendHash):
 	receipt = w3.eth.wait_for_transaction_receipt(deposit_tx_hash)
 	print("🎉 Executed successfully!" if receipt['status'] == 1 else "❌ Transaction failed.")
 
+	# Debug failed transaction
+	if receipt['status'] != 1:
+		try:
+			# Try to simulate the transaction to get the revert reason
+			tx = w3.eth.get_transaction(deposit_tx_hash)
+			w3.eth.call({
+				'to': tx['to'],
+				'from': tx['from'],
+				'data': tx['input'],
+				'value': tx['value'],
+				'gas': tx['gas']
+			}, block_identifier='latest')
+		except ContractLogicError as e:
+			print("🔍 Revert reason:", e)
+		except Exception as e:
+			print("🔍 Error:", e)
 
-test_deposit_ETFY(1*10**9, "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcd16")
+
+test_deposit_ETFY(1*10**9, "0x7234567890abcdef8234567890abcdef1234567890abcdef1234567890abcd17")
