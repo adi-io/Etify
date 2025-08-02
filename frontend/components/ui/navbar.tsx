@@ -14,7 +14,7 @@ export default function Navbar({
             {/* Desktop navbar */}
             <div className="flex items-center gap-8">
                 <a href="/" className="font-bold text-white text-lg">
-                    Digital SPX
+                    Etify
                 </a>
                 <div className="hidden md:flex items-center gap-8">
                     {walletAddressManager}
@@ -63,7 +63,7 @@ export default function Navbar({
                                 href="/"
                                 className="font-bold text-xl text-white mb-2"
                             >
-                                Digital SPX
+                                Etify
                             </a>
                             <div className="flex flex-col gap-2">
                                 {walletAddressManager}
